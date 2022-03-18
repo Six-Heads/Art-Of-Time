@@ -54,11 +54,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\user\\Desktop\\ArtOfTime\\ArtOfTime\\ArtOfTime.csproj",
+      "projectUniqueName": "C:\\Users\\user\\Desktop\\Art-Of-Time\\Art-Of-Time-BE\\ArtOfTime\\ArtOfTime.csproj",
       "projectName": "ArtOfTime",
-      "projectPath": "C:\\Users\\user\\Desktop\\ArtOfTime\\ArtOfTime\\ArtOfTime.csproj",
+      "projectPath": "C:\\Users\\user\\Desktop\\Art-Of-Time\\Art-Of-Time-BE\\ArtOfTime\\ArtOfTime.csproj",
       "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\user\\Desktop\\ArtOfTime\\ArtOfTime\\obj\\",
+      "outputPath": "C:\\Users\\user\\Desktop\\Art-Of-Time\\Art-Of-Time-BE\\ArtOfTime\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"

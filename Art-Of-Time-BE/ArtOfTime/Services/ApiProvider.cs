@@ -12,8 +12,9 @@ using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json.Converters;
 using ArtOfTime.Models;
+using ArtOfTime.Interfaces;
 
-namespace ArtOfTime
+namespace ArtOfTime.Services
 {
     /// <summary>
     /// Core Api Requests Provider
