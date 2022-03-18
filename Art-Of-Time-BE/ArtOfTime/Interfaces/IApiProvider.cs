@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ArtOfTime
+namespace ArtOfTime.Interfaces
 {
     public interface IApiProvider
     {
