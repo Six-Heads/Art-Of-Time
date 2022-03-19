@@ -1,13 +1,15 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
+using Hangfire;
+using Hangfire.Server;
 
 namespace ArtOfTime.Jobs
 {
     public class GenerateImageJob
     {
 
-        public async Task Test()
+        [AutomaticRetry(Attempts = 0)]
+        public async Task Test(PerformContext hangfire)
         {
             string[] lines =
             {

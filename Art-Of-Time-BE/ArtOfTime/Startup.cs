@@ -1,18 +1,13 @@
 using ArtOfTime.Interfaces;
 using ArtOfTime.Jobs;
 using ArtOfTime.Services;
-using Hangfire;
-using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Hangfire;
+using Hangfire.MemoryStorage;
 
 namespace ArtOfTime
 {
@@ -28,18 +23,15 @@ namespace ArtOfTime
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            GlobalConfiguration.Configuration.UseMemoryStorage();
+            services.AddHangfire(c => c.UseMemoryStorage());
+
+            JobStorage.Current = new MemoryStorage();
+
+            var generateJob = new GenerateImageJob();
+            RecurringJob.RemoveIfExists("generateimage");
+            RecurringJob.AddOrUpdate("generateimage", () => generateJob.Test(null), Cron.Minutely);
 
             services.AddRazorPages();
-
-            services.AddHangfire(config =>
-            {
-                config.UseMemoryStorage();
-            });
-
-            services.AddHangfireServer();
-
-            RecurringJob.AddOrUpdate<GenerateImageJob>("GenerateImage", x => x.Test(), Cron.Minutely());
 
             services.AddTransient<IApiProvider, ApiProvider>();
         }
@@ -47,6 +39,8 @@ namespace ArtOfTime
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHangfireServer();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -60,7 +54,6 @@ namespace ArtOfTime
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseAuthorization();
