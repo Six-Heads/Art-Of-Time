@@ -29,7 +29,7 @@ namespace ArtOfTime.Services
             // we dont need the result at the moment
             // the python script will need atleast 30minutes to generate new image
             // TODO: maybe remove await
-            await apiProvider.PostAsync<GenerateImageRequestModel, object>(URL, null, requestModel);   
+            await apiProvider.PostAsyncInstantTimeout<GenerateImageRequestModel, object>(URL, null, requestModel);   
         }
 
         /// <summary>

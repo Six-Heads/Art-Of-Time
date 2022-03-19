@@ -5,6 +5,7 @@ using ArtOfTime.Interfaces;
 using ArtOfTime.Models.Images;
 using Hangfire;
 using Hangfire.Server;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ArtOfTime.Jobs
@@ -43,7 +44,8 @@ namespace ArtOfTime.Jobs
 
                 if (result != null)
                 {
-                    // TODO: Send image to blockchain
+                    var jsonUrl = await iPFSService.Upload(result, image.TimeStamp, image.BasedOnText.Split(",").ToList());
+                    await ethereumService.CreateToken(jsonUrl);
                     image.IsFetched = true;
                     await imageRepository.UpdateImage(image);
                 }
@@ -69,6 +71,7 @@ namespace ArtOfTime.Jobs
                 ImageId = newImage.TimeStamp,
                 BasedOnText = newImage.BasedOnText
             });
+
         }
     }
 }
