@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ArtOfTime
 {
-    public class IPFSAddResult : ResultBase
+    public class IPFSAddResult
     {
         [JsonProperty("Name")]
         public string Name { get; set; }

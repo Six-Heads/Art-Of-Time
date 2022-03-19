@@ -35,6 +35,10 @@ namespace ArtOfTime
 
             services.AddTransient<IApiProvider, ApiProvider>();
             services.AddTransient<IIPFSService, IPFSService>();
+
+            services.AddSingleton<ITwitterService, TwitterService>();
+            ITwitterService twitterService = new TwitterService(new ApiProvider());
+            twitterService.GetTrends();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
