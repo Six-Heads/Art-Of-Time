@@ -1,10 +1,10 @@
-﻿using ArtOfTime.Models.Twitter;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ArtOfTime.Interfaces
 {
     public interface ITwitterService
     {
-        Task<TrendsListModel> GetTrends();
+        Task<List<string>> GetTrends();
     }
 }
