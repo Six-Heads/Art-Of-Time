@@ -1,5 +1,7 @@
-﻿using ArtOfTime;
+﻿using ArtOfTime.Interfaces;
+using ArtOfTime.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -10,9 +12,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json.Converters;
-using ArtOfTime.Models;
-using ArtOfTime.Interfaces;
 
 namespace ArtOfTime.Services
 {
