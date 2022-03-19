@@ -46,7 +46,8 @@ namespace ArtOfTime
             IEthereumService ethereumService = new EthereumService(Configuration);
             IIPFSService iPFSService = new IPFSService(new ApiProvider(), Configuration, ethereumService);
             byte[] image = File.ReadAllBytes("test.png");
-            System.Console.WriteLine(iPFSService.Upload(image, "1647696027", new System.Collections.Generic.List<string> { "Ukraine", "Queen", "poverty","NFT", "Trump" }).GetAwaiter().GetResult());
+            var json = iPFSService.Upload(image, "1647696027", new System.Collections.Generic.List<string> { "Ukraine", "Queen", "poverty","NFT", "Trump" }).GetAwaiter().GetResult();
+            ethereumService.CreateToken(json).GetAwaiter().GetResult();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
