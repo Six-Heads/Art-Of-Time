@@ -1,13 +1,13 @@
 using ArtOfTime.Interfaces;
 using ArtOfTime.Jobs;
 using ArtOfTime.Services;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Hangfire;
-using Hangfire.MemoryStorage;
 using System.IO;
 
 namespace ArtOfTime
@@ -29,7 +29,7 @@ namespace ArtOfTime
             JobStorage.Current = new MemoryStorage();
 
             RecurringJob.RemoveIfExists("generateimage");
-            RecurringJob.AddOrUpdate<GenerateImageJob>("generateimage", x => x.Test(null), Cron.Minutely);
+            RecurringJob.AddOrUpdate<GenerateImageJob>("generateimage", x => x.Work(null), Cron.Minutely);
 
             services.AddRazorPages();
 
