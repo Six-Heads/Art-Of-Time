@@ -5,6 +5,7 @@ using ArtOfTime.Interfaces;
 using ArtOfTime.Models.Images;
 using Hangfire;
 using Hangfire.Server;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,37 +41,51 @@ namespace ArtOfTime.Jobs
 
             foreach (var image in notFetchedImages)
             {
-                var result = await imageGeneratorService.GetGeneratedImage(image.TimeStamp);
-
-                if (result != null)
+                try
                 {
-                    var jsonUrl = await iPFSService.Upload(result, image.TimeStamp, image.BasedOnText.Split(",").ToList());
-                    await ethereumService.CreateToken(jsonUrl);
-                    image.IsFetched = true;
-                    await imageRepository.UpdateImage(image);
+                    var result = await imageGeneratorService.GetGeneratedImage(image.TimeStamp);
+
+                    if (result != null)
+                    {
+                        var jsonUrl = await iPFSService.Upload(result, image.TimeStamp, image.BasedOnText.Split(", ").ToList());
+                        await ethereumService.CreateToken(jsonUrl);
+                        image.IsFetched = true;
+                        await imageRepository.UpdateImage(image);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // TODO: Handle
                 }
             }
 
-            // Get trends
-            var twitterTrends = await twitterService.GetTrends();
-
-            // Create new image entity
-            var newImage = new Image
+            try
             {
-                TimeStamp = CommonHelper.GetCurrentTimestamp().ToString(),
-                BasedOnText = string.Join(",", twitterTrends),
-                IsFetched = false,
-            };
+                // Get trends
+                var twitterTrends = await twitterService.GetTrends();
 
-            // Save new image entity to db
-            await imageRepository.CreateImage(newImage);
+                // Create new image entity
+                var newImage = new Image
+                {
+                    TimeStamp = CommonHelper.GetCurrentTimestamp().ToString(),
+                    BasedOnText = string.Join(", ", twitterTrends),
+                    IsFetched = false,
+                };
 
-            // Send request to generate new image
-            await imageGeneratorService.GenerateImage(new GenerateImageRequestModel
+                // Save new image entity to db
+                await imageRepository.CreateImage(newImage);
+
+                // Send request to generate new image
+                await imageGeneratorService.GenerateImage(new GenerateImageRequestModel
+                {
+                    ImageId = newImage.TimeStamp,
+                    BasedOnText = newImage.BasedOnText
+                });
+            }
+            catch (Exception ex)
             {
-                ImageId = newImage.TimeStamp,
-                BasedOnText = newImage.BasedOnText
-            });
+                // TODO: handle
+            }
 
         }
     }
