@@ -1,6 +1,7 @@
 ﻿using ArtOfTime.Helpers;
 using ArtOfTime.Interfaces;
 using ArtOfTime.Models.Twitter;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +12,23 @@ namespace ArtOfTime.Services
     public class TwitterService : ITwitterService
     {
         private readonly IApiProvider apiProvider;
+        private readonly IConfiguration configuration;
 
-        public TwitterService(IApiProvider apiProvider)
+        public TwitterService(IApiProvider apiProvider, IConfiguration configuration)
         {
             this.apiProvider = apiProvider ?? throw new ArgumentNullException(nameof(apiProvider));
+            this.configuration = configuration;
         }
 
         public async Task<List<string>> GetTrends()
         {
-            string url = "https://api.twitter.com/1.1/trends/place.json";
-            string apiKey = "PsPBffpiyAvN3IWVmkOAiylhc";
-            string apiKeySecret = "GShwG86aQ89DUPEziO8ZBNUyBZIaa2SV2dBBy6G2H7uekJGL6X";
-            string bearerToken = "AAAAAAAAAAAAAAAAAAAAABB%2FaQEAAAAAaX92XCqT7U0uhALKrc75jHFm4mk%3D1el8kPiOkQvXjUtRwqBnYE7FYNFDx5qGSxzgeR2PaBQ5wqd20T";
-            string accessToken = "1504860291733020672-LJnenkweY9ahpnUodHA3I7gdGmMnsQ";
-            string accessTokenSecret = "y10SCfacOfWtsznPcsLzstsuMm0BRaMT0fHU7i7xbwhJ0";
+            string url = this.configuration["TwitterApi:GetTrendsUrl"];
+            string apiKey = this.configuration["TwitterApi:ApiKey"];
+            string apiKeySecret = this.configuration["TwitterApi:ApiKeySecret"];
+            string bearerToken = this.configuration["TwitterApi:BearerToken"];
+            string accessToken = this.configuration["TwitterApi:AccessToken"];
+            string accessTokenSecret = this.configuration["TwitterApi:AccessTokenSecret"];
+            string id = this.configuration["TwitterApi:CountryWoeid"];
 
             object[] uriParams = new object[]
             {
@@ -36,7 +40,7 @@ namespace ArtOfTime.Services
 
             Dictionary<string, object> queryParams = new Dictionary<string, object>();
 
-            queryParams.Add("id", 23424977);
+            queryParams.Add("id", id);
 
             try
             {
