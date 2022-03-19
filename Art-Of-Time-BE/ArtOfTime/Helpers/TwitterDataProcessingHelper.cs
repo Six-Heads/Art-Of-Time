@@ -43,15 +43,15 @@ namespace ArtOfTime.Helpers
             if (words.Count == 1)
             {
                 string word = words[0];
-                int WORD_LENGTH = words[0].Length;
+                int wordLength = words[0].Length;
                 words.Clear();
 
                 int wordsCount = 0;
                 string currentWord = word[0].ToString();
 
-                for (int i = 1; i < WORD_LENGTH; i++)
+                for (int i = 1; i < wordLength; i++)
                 {
-                    if (WORD_LENGTH - 1 - i >= 1)
+                    if (wordLength - 1 - i >= 1)
                     {
                         if (char.IsUpper(word[i]))
                         {
@@ -59,7 +59,7 @@ namespace ArtOfTime.Helpers
                             {
                                 currentWord += word[i];
 
-                                if (i + 1 == WORD_LENGTH - 1)
+                                if (i + 1 == wordLength - 1)
                                 {
                                     currentWord += word[i + 1];
                                     break;
@@ -76,7 +76,7 @@ namespace ArtOfTime.Helpers
                         {
                             currentWord += word[i];
 
-                            if (i + 1 == WORD_LENGTH - 1)
+                            if (i + 1 == wordLength - 1)
                             {
                                 if (char.IsUpper(word[i + 1]))
                                 {
@@ -94,9 +94,9 @@ namespace ArtOfTime.Helpers
                     }
                     else
                     {
-                        if (WORD_LENGTH - 1 - i == 0)
+                        if (wordLength - 1 - i == 0)
                         {
-                            currentWord += word[WORD_LENGTH - 1].ToString();
+                            currentWord += word[wordLength - 1].ToString();
                         }
                         break;
                     }

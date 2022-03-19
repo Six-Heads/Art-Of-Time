@@ -12,6 +12,7 @@ namespace ArtOfTime.Data
         {
             this.Configuration = configuration;
         }
+
         public DbSet<Image> Images { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)

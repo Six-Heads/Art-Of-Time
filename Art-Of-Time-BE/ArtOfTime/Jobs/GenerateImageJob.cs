@@ -43,12 +43,18 @@ namespace ArtOfTime.Jobs
             {
                 try
                 {
+                    // fetch image from python api
                     var result = await imageGeneratorService.GetGeneratedImage(image.TimeStamp);
 
                     if (result != null)
                     {
+                        // upload to ipfs server
                         var jsonUrl = await iPFSService.Upload(result, image.TimeStamp, image.BasedOnText.Split(", ").ToList());
+
+                        // write nft to the blockchain
                         await ethereumService.CreateToken(jsonUrl);
+
+                        // update db
                         image.IsFetched = true;
                         await imageRepository.UpdateImage(image);
                     }
