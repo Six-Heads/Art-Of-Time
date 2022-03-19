@@ -1,4 +1,5 @@
-﻿using ArtOfTime.Interfaces;
+﻿using ArtOfTime.Helpers;
+using ArtOfTime.Interfaces;
 using ArtOfTime.Models.Twitter;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace ArtOfTime.Services
             this.apiProvider = apiProvider ?? throw new ArgumentNullException(nameof(apiProvider));
         }
 
-        public async Task<TrendsListModel> GetTrends()
+        public async Task<List<string>> GetTrends()
         {
             string url = "https://api.twitter.com/1.1/trends/place.json";
             string apiKey = "PsPBffpiyAvN3IWVmkOAiylhc";
@@ -35,14 +36,17 @@ namespace ArtOfTime.Services
 
             Dictionary<string, object> queryParams = new Dictionary<string, object>();
 
-            queryParams.Add("id", 1);
+            queryParams.Add("id", 23424977);
 
             try
             {
                 var result = await apiProvider.GetAsync<List<TrendsListModel>>(url, uriParams, queryParams, bearerToken);
+                var helper = new TwitterDataProcessingHelper();
 
+                var trendingHashtags = new List<string>();
+                trendingHashtags = await helper.ExtractText(result[0].Trends);
 
-                return result[0];
+                return trendingHashtags;
             }
             catch (Exception ex)
             {
