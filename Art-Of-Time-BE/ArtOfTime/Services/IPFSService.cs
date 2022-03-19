@@ -10,7 +10,7 @@ namespace ArtOfTime.Services
     public class IPFSService : IIPFSService
     {
         private const string uploadUri = "https://ipfs.infura.io:5001/api/v0/add";
-        private const string getUri = "https://ipfs.infura.io:5001/api/v0/cat?arg={0}";
+        private const string getUri = "https://ipfs.infura.io/ipfs/{0}";
         private string authToken;
 
         private readonly IApiProvider provider;
