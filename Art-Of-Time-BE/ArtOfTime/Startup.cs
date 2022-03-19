@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using System.IO;
 
 namespace ArtOfTime
 {
@@ -35,10 +36,17 @@ namespace ArtOfTime
 
             services.AddTransient<IApiProvider, ApiProvider>();
             services.AddTransient<IIPFSService, IPFSService>();
+            services.AddTransient<IEthereumService, EthereumService>();
+
 
             services.AddSingleton<ITwitterService, TwitterService>();
             ITwitterService twitterService = new TwitterService(new ApiProvider());
             twitterService.GetTrends();
+
+            IEthereumService ethereumService = new EthereumService(Configuration);
+            IIPFSService iPFSService = new IPFSService(new ApiProvider(), Configuration, ethereumService);
+            byte[] image = File.ReadAllBytes("test.png");
+            System.Console.WriteLine(iPFSService.Upload(image, "1647696027", new System.Collections.Generic.List<string> { "Ukraine", "Queen", "poverty","NFT", "Trump" }).GetAwaiter().GetResult());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

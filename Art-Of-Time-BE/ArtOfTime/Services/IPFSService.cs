@@ -14,10 +14,12 @@ namespace ArtOfTime.Services
         private string authToken;
 
         private readonly IApiProvider provider;
+        private readonly IEthereumService ethereumService;
 
-        public IPFSService(IApiProvider provider, IConfiguration configuration /*, ISCProvider*/)
+        public IPFSService(IApiProvider provider, IConfiguration configuration, IEthereumService ethereumService)
         {
             this.provider = provider;
+            this.ethereumService = ethereumService;
             this.authToken = GenerateAuthToken(configuration["IPFS:ProjectId"], configuration["IPFS:ProjectSecret"]);
         }
 
@@ -27,15 +29,15 @@ namespace ArtOfTime.Services
             var imageName = uid + ".png";
             var jsonName = uid + ".json";
 
-            var imageUri = await UploadData(image,imageName);
+            var imageUri = await UploadData(image, imageName);
 
-            var id = ""; //SCProvider
-            var json = GenerateJsonMetadata(id, imageUri, timestamp, attributes);
+            var id = await ethereumService.GetCollectionSize() + 1;
+            var json = GenerateJsonMetadata(id.ToString(), imageUri, timestamp, attributes);
 
             return await UploadData(Encoding.UTF8.GetBytes(json), jsonName);
         }
 
-        private async Task<string> UploadData(byte[] data,string dataName)
+        private async Task<string> UploadData(byte[] data, string dataName)
         {
             var result = await provider.PostAsyncMultipart<IPFSAddResult>(uploadUri, null, data, dataName, authToken);
 
