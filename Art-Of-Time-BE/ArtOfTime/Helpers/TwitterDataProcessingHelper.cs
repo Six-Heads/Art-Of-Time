@@ -51,13 +51,19 @@ namespace ArtOfTime.Helpers
 
                 for (int i = 1; i < WORD_LENGTH; i++)
                 {
-                    if (WORD_LENGTH - 1 - i >= 2)
+                    if (WORD_LENGTH - 1 - i >= 1)
                     {
                         if (char.IsUpper(word[i]))
                         {
-                            if (char.IsUpper(word[i + 1]) && char.IsUpper(word[i-1]))
+                            if (char.IsUpper(word[i + 1]) && char.IsUpper(word[i - 1]))
                             {
                                 currentWord += word[i];
+
+                                if (i + 1 == WORD_LENGTH - 1)
+                                {
+                                    currentWord += word[i + 1];
+                                    break;
+                                }
                             }
                             else
                             {
@@ -69,17 +75,27 @@ namespace ArtOfTime.Helpers
                         else
                         {
                             currentWord += word[i];
+
+                            if (i + 1 == WORD_LENGTH - 1)
+                            {
+                                if (char.IsUpper(word[i + 1]))
+                                {
+                                    words.Add(currentWord);
+                                    wordsCount++;
+                                    currentWord = word[i+1].ToString();
+                                }
+                                else
+                                {
+                                    currentWord += word[i + 1];
+                                    break;
+                                }
+                            }
                         }
                     }
                     else
                     {
                         if (WORD_LENGTH - 1 - i == 0)
                         {
-                            currentWord += word[WORD_LENGTH - 1].ToString();
-                        }
-                        if (WORD_LENGTH - 1 - i == 1)
-                        {
-                            currentWord += word[WORD_LENGTH - 2].ToString();
                             currentWord += word[WORD_LENGTH - 1].ToString();
                         }
                         break;
