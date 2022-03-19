@@ -1,13 +1,13 @@
 using ArtOfTime.Interfaces;
 using ArtOfTime.Jobs;
 using ArtOfTime.Services;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Hangfire;
-using Hangfire.MemoryStorage;
 using System.IO;
 
 namespace ArtOfTime
@@ -28,18 +28,17 @@ namespace ArtOfTime
 
             JobStorage.Current = new MemoryStorage();
 
-            var generateJob = new GenerateImageJob();
             RecurringJob.RemoveIfExists("generateimage");
-            RecurringJob.AddOrUpdate("generateimage", () => generateJob.Test(null), Cron.Minutely);
+            RecurringJob.AddOrUpdate<GenerateImageJob>("generateimage", x => x.Work(null), Cron.Minutely);
 
             services.AddRazorPages();
 
             services.AddTransient<IApiProvider, ApiProvider>();
             services.AddTransient<IIPFSService, IPFSService>();
             services.AddTransient<IEthereumService, EthereumService>();
-
-
+            services.AddTransient<IImageGeneratorService, ImageGeneratorService>();
             services.AddSingleton<ITwitterService, TwitterService>();
+
             ITwitterService twitterService = new TwitterService(new ApiProvider());
             twitterService.GetTrends();
 
