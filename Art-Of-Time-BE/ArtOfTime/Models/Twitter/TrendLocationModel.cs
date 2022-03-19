@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace ArtOfTime.Models.Twitter
 {
     public class TrendLocationModel
     {
+        [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("woeid")]
         public int Woeid { get; set; }
     }
 }
