@@ -34,6 +34,7 @@ namespace ArtOfTime
             services.AddRazorPages();
 
             services.AddTransient<IApiProvider, ApiProvider>();
+            services.AddTransient<IIPFSService, IPFSService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
