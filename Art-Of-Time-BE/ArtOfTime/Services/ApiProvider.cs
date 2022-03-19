@@ -39,6 +39,34 @@ namespace ArtOfTime.Services
             serializerSettings.Converters.Add(new StringEnumConverter());
         }
 
+
+        public async Task<TResult> GetAsyncInstantTimeout<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "")
+        {
+            try
+            {
+                using (HttpClient httpClient = CreateHttpClientInstantTimeout(token))
+                {
+                    var urlWithQueryParams = PrepareEndpoint(uri, uriParams, queryParams);
+
+                    var request = new HttpRequestMessage(HttpMethod.Get, urlWithQueryParams);
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    var response = await httpClient.SendAsync(request);
+                    await HandleResponse(response);
+                    string serialized = await response.Content.ReadAsStringAsync();
+
+                    TResult result = JsonConvert.DeserializeObject<TResult>(serialized, serializerSettings);
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
         /// <summary>
         /// Perform asynchronous Get request
         /// </summary>
@@ -480,6 +508,27 @@ namespace ArtOfTime.Services
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        private HttpClient CreateHttpClientInstantTimeout(string token = "")
+        {
+            var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(1);
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                if (token.StartsWith("Basic"))
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", token.Split()[1]);
+                }
+                else
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
+            }
+
+            return httpClient;
         }
 
         /// <summary>

@@ -48,8 +48,8 @@ namespace ArtOfTime.Services
         {
             return
 $@"{{
-    ""name"": ""ArtOfTime"",
-    ""description"": ""ArtOfTime#{id}"",
+    ""name"": ""ArtOfTime #{id}"",
+    ""description"": ""AI generated snapshot of the Twitter trends. Timestamp: {timestamp}"",
     ""image"": ""{imageUri}"",
     ""attributes"": [
         {{

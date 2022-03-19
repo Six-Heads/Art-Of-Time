@@ -15,8 +15,9 @@ namespace ArtOfTime.Interfaces
         /// <param name="token">Access Bearer Token</param>
         /// <returns></returns>
         Task<TResult> GetAsync<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "");
+        Task<TResult> GetAsyncInstantTimeout<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "");
 
-           
+
 
         /// <summary>
         /// Perfor asyncrhonous Post request
