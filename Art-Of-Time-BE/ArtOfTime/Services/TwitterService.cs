@@ -39,15 +39,15 @@ namespace ArtOfTime.Services
 
             try
             {
-            var result = await apiProvider.GetAsync<TrendsListModel>(url, uriParams, queryParams, bearerToken);
-                return result;
+                var result = await apiProvider.GetAsync<List<TrendsListModel>>(url, uriParams, queryParams, bearerToken);
+
+
+                return result[0];
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw new Exception(ex.Message);
             }
-            return null;
         }
 
 

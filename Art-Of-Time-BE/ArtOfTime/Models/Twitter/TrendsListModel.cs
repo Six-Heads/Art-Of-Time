@@ -14,10 +14,10 @@ namespace ArtOfTime.Models.Twitter
         [JsonProperty("as_of")]
         public DateTime ReceivedAt { get; set; }
 
-        [JsonProperty()]
+        [JsonProperty("created_at")]
         public DateTime CreatedOn { get; set; }
 
-        [JsonProperty()]
+        [JsonProperty("locations")]
         public List<TrendLocationModel> TrendLocations { get; set; }
     }
 }
