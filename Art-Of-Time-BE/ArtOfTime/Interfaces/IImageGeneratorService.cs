@@ -1,5 +1,4 @@
 ﻿using ArtOfTime.Models.Images;
-using System;
 using System.Threading.Tasks;
 
 namespace ArtOfTime.Interfaces
@@ -8,6 +7,6 @@ namespace ArtOfTime.Interfaces
     {
         Task GenerateImage(GenerateImageRequestModel requestModel);
 
-        Task<byte[]> GetGeneratedImage(Guid id);
+        Task<byte[]> GetGeneratedImage(string timestamp);
     }
 }

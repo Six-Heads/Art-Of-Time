@@ -39,6 +39,7 @@ namespace ArtOfTime.Helpers
                 .Split(new[] { ' ', '-', '_', '.', ',', '/', '\\' }, StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
 
+            //split hashtags to words
             if (words.Count == 1)
             {
                 string word = words[0];

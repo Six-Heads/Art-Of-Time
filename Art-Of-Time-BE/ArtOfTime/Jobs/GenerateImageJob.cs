@@ -1,4 +1,8 @@
-﻿using ArtOfTime.Interfaces;
+﻿using ArtOfTime.Data.Entities;
+using ArtOfTime.Data.Repositories.Contracts;
+using ArtOfTime.Helpers;
+using ArtOfTime.Interfaces;
+using ArtOfTime.Models.Images;
 using Hangfire;
 using Hangfire.Server;
 using System.Threading.Tasks;
@@ -7,17 +11,20 @@ namespace ArtOfTime.Jobs
 {
     public class GenerateImageJob
     {
+        private readonly IImageRepository imageRepository;
         private readonly IImageGeneratorService imageGeneratorService;
         private readonly ITwitterService twitterService;
         private readonly IIPFSService iPFSService;
         private readonly IEthereumService ethereumService;
 
         public GenerateImageJob(
+            IImageRepository imageRepository,
             IImageGeneratorService imageGeneratorService,
             ITwitterService twitterService,
             IIPFSService iPFSService,
             IEthereumService ethereumService)
         {
+            this.imageRepository = imageRepository;
             this.imageGeneratorService = imageGeneratorService;
             this.twitterService = twitterService;
             this.iPFSService = iPFSService;
@@ -27,20 +34,41 @@ namespace ArtOfTime.Jobs
         [AutomaticRetry(Attempts = 0)]
         public async Task Work(PerformContext hangfire)
         {
-            // TODO:
             // Fetch not fetched images
-            // Upload image to blockchain
+            var notFetchedImages = await imageRepository.GetNotFetchedImages();
 
-            // TODO:
-            // Fetch trends
-
-            // TODO:
-            // Request a new image to be generated
-
-            string[] lines =
+            foreach (var image in notFetchedImages)
             {
-                "First line", "Second line", "Third line"
+                var result = await imageGeneratorService.GetGeneratedImage(image.TimeStamp);
+
+                if (result != null)
+                {
+                    // TODO: Send image to blockchain
+                    image.IsFetched = true;
+                    await imageRepository.UpdateImage(image);
+                }
+            }
+
+            // Get trends
+            var twitterTrends = await twitterService.GetTrends();
+
+            // Create new image entity
+            var newImage = new Image
+            {
+                TimeStamp = CommonHelper.GetCurrentTimestamp().ToString(),
+                BasedOnText = string.Join(",", twitterTrends),
+                IsFetched = false,
             };
+
+            // Save new image entity to db
+            await imageRepository.CreateImage(newImage);
+
+            // Send request to generate new image
+            await imageGeneratorService.GenerateImage(new GenerateImageRequestModel
+            {
+                ImageId = newImage.TimeStamp,
+                BasedOnText = newImage.BasedOnText
+            });
         }
     }
 }

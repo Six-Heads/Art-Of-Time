@@ -1,3 +1,6 @@
+using ArtOfTime.Data;
+using ArtOfTime.Data.Repositories.Contracts;
+using ArtOfTime.Data.Repositories.Implementations;
 using ArtOfTime.Interfaces;
 using ArtOfTime.Jobs;
 using ArtOfTime.Services;
@@ -5,6 +8,7 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +28,9 @@ namespace ArtOfTime
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddHangfire(c => c.UseMemoryStorage());
 
             JobStorage.Current = new MemoryStorage();
@@ -33,11 +40,13 @@ namespace ArtOfTime
 
             services.AddRazorPages();
 
+            services.AddTransient<IImageRepository, ImageRepository>();
+
             services.AddTransient<IApiProvider, ApiProvider>();
             services.AddTransient<IIPFSService, IPFSService>();
             services.AddTransient<IEthereumService, EthereumService>();
             services.AddTransient<IImageGeneratorService, ImageGeneratorService>();
-            services.AddSingleton<ITwitterService, TwitterService>();
+            services.AddTransient<ITwitterService, TwitterService>();
 
             ITwitterService twitterService = new TwitterService(new ApiProvider(), Configuration);
             twitterService.GetTrends();
@@ -50,7 +59,7 @@ namespace ArtOfTime
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context)
         {
             app.UseHangfireServer();
 
@@ -65,6 +74,7 @@ namespace ArtOfTime
                 app.UseHsts();
             }
 
+            context.Database.Migrate();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();

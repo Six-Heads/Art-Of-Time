@@ -37,9 +37,9 @@ namespace ArtOfTime.Services
         /// </summary>
         /// <param name="imageId">Id of the image we want</param>
         /// <returns>The image as byte array</returns>
-        public async Task<byte[]> GetGeneratedImage(Guid imageId)
+        public async Task<byte[]> GetGeneratedImage(string imageId)
         {
-            return await apiProvider.GetAsync<byte[]>(URL, new object[] { imageId.ToString() }, null);
+            return await apiProvider.GetAsync<byte[]>(URL, new object[] { imageId }, null);
         }
     }
 }
