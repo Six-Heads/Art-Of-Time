@@ -49,7 +49,6 @@ namespace ArtOfTime.Services
         /// <param name="token">bearer token</param>
         /// <returns></returns>
         public async Task<TResult> GetAsync<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "")
-            where TResult : ResultBase
         {
             try
             {
@@ -224,7 +223,6 @@ namespace ArtOfTime.Services
         /// <param name="header">Additional Header Parameter With Unique GUID</param>
         /// <returns>Result Data</returns>
         public async Task<TResult> PostAsync<TResult>(string uri, object[] uriParams, string token = "", string header = "")
-             where TResult : ResultBase
         {
             try
             {
@@ -269,7 +267,6 @@ namespace ArtOfTime.Services
         /// <param name="header">Additional Header Parameter With Unique GUID</param>
         /// <returns>Result Data</returns>
         public async Task<TResult> PostAsync<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "", string header = "")
-             where TResult : ResultBase
         {
             try
             {
@@ -312,7 +309,6 @@ namespace ArtOfTime.Services
         /// <param name="header">Additional Header Parameter With Unique GUID</param>
         /// <returns>Result Data</returns>
         public async Task<TResult> PostAsync<TResult>(string uri, string token = "", string header = "")
-             where TResult : ResultBase
         {
             try
             {
@@ -356,7 +352,6 @@ namespace ArtOfTime.Services
         /// <param name="header">Additional Header Parameter With Unique GUID</param>
         /// <returns>Result Data</returns>
         public async Task<TResult> PutAsync<TRequest, TResult>(string uri, object[] uriParams, TRequest data, string token = "", string header = "")
-             where TResult : ResultBase
         {
             try
             {
@@ -403,7 +398,6 @@ namespace ArtOfTime.Services
         /// <param name="header">Additional Header Parameter With Unique GUID</param>
         /// <returns>Result Data</returns>
         public async Task<TResult> PutAsync<TRequest, TResult>(string uri, TRequest data, string token = "", string header = "")
-             where TResult : ResultBase
         {
             try
             {

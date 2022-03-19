@@ -14,8 +14,9 @@ namespace ArtOfTime.Interfaces
         /// <param name="queryParams">Query String Parameters</param>
         /// <param name="token">Access Bearer Token</param>
         /// <returns></returns>
-        Task<TResult> GetAsync<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "")
-            where TResult : ResultBase;
+        Task<TResult> GetAsync<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "");
+
+           
 
         /// <summary>
         /// Perfor asyncrhonous Post request
@@ -53,8 +54,8 @@ namespace ArtOfTime.Interfaces
         /// <param name="token">Access Bearer Token</param>
         /// <param name="header">Additional Header Parameter With Unique GUID</param>
         /// <returns>Result Data</returns>
-        Task<TResult> PostAsync<TResult>(string uri, object[] uriParams, string token = "", string header = "")
-             where TResult : ResultBase;
+        Task<TResult> PostAsync<TResult>(string uri, object[] uriParams, string token = "", string header = "");
+
 
         /// <summary>
         /// Perfor asyncrhonous Post request
@@ -66,8 +67,8 @@ namespace ArtOfTime.Interfaces
         /// <param name="token">Access Bearer Token</param>
         /// <param name="header">Additional Header Parameter With Unique GUID</param>
         /// <returns>Result Data</returns>
-        Task<TResult> PostAsync<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "", string header = "")
-            where TResult : ResultBase;
+        Task<TResult> PostAsync<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "", string header = "");
+
 
         /// <summary>
         /// Perfor asyncrhonous Post request
@@ -77,8 +78,8 @@ namespace ArtOfTime.Interfaces
         /// <param name="token">Access Bearer Token</param>
         /// <param name="header">Additional Header Parameter With Unique GUID</param>
         /// <returns>Result Data</returns>
-        Task<TResult> PostAsync<TResult>(string uri, string token = "", string header = "")
-            where TResult : ResultBase;
+        Task<TResult> PostAsync<TResult>(string uri, string token = "", string header = "");
+          
 
         /// <summary>
         /// Perform asynchronous Put Request
@@ -91,7 +92,7 @@ namespace ArtOfTime.Interfaces
         /// <param name="token">Access Bearer Token</param>
         /// <param name="header">Additional Header Parameter With Unique GUID</param>
         /// <returns>Result Data</returns>
-        Task<TResult> PutAsync<TRequest, TResult>(string uri, object[] uriParams, TRequest data, string token = "", string header = "")
-            where TResult : ResultBase;
+        Task<TResult> PutAsync<TRequest, TResult>(string uri, object[] uriParams, TRequest data, string token = "", string header = "");
+            
     }
 }
