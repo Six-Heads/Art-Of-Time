@@ -70,6 +70,8 @@ namespace ArtOfTime.Interfaces
         Task<TResult> PostAsync<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "", string header = "");
 
 
+        Task<TResult> PostAsyncMultipart<TResult>(string uri, object[] uriParams, byte[] data, string dataName, string token = "", string header = "");
+
         /// <summary>
         /// Perfor asyncrhonous Post request
         /// </summary>

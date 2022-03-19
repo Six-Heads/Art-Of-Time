@@ -18,30 +18,28 @@ namespace ArtOfTime.Services
         public IPFSService(IApiProvider provider, IConfiguration configuration /*, ISCProvider*/)
         {
             this.provider = provider;
-            this.authToken = GenerateAuthToken(configuration["IPFS:ProjectId"], configuration["IPFS:Project:ProjectSecret"]);
+            this.authToken = GenerateAuthToken(configuration["IPFS:ProjectId"], configuration["IPFS:ProjectSecret"]);
         }
 
         public async Task<string> Upload(byte[] image, string timestamp, List<string> attributes)
         {
-            var imageUri = await UploadData(image);
+            var uid = Guid.NewGuid().ToString();
+            var imageName = uid + ".png";
+            var jsonName = uid + ".json";
+
+            var imageUri = await UploadData(image,imageName);
 
             var id = ""; //SCProvider
-
             var json = GenerateJsonMetadata(id, imageUri, timestamp, attributes);
-            var jsonBytes = Encoding.UTF8.GetBytes(json);
 
-            return await UploadData(jsonBytes);
+            return await UploadData(Encoding.UTF8.GetBytes(json), jsonName);
         }
 
-        private async Task<string> UploadData(byte[] data)
+        private async Task<string> UploadData(byte[] data,string dataName)
         {
-            var result = await provider.PostAsync<byte[], IPFSAddResult>(uploadUri,
-                                                                         null,
-                                                                         data,
-                                                                         authToken);
+            var result = await provider.PostAsyncMultipart<IPFSAddResult>(uploadUri, null, data, dataName, authToken);
 
             return string.Format(getUri, result.Hash);
-
         }
 
         private string GenerateJsonMetadata(string id, string imageUri, string timestamp, List<string> twitterAttributes)

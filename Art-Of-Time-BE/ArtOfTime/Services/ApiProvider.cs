@@ -166,6 +166,57 @@ namespace ArtOfTime.Services
             }
         }
 
+
+        /// <summary>
+        /// Perfor asyncrhonous Post request
+        /// </summary>
+        /// <typeparam name="TRequest">Request Model Type</typeparam>
+        /// <typeparam name="TResult">Result Model Type</typeparam>
+        /// <param name="uri">Endpoint Uri</param>
+        /// <param name="uriParams">uri injected params</param>
+        /// <param name="data">Request Data</param>
+        /// <param name="token">Access Bearer Token</param>
+        /// <param name="header">Additional Header Parameter With Unique GUID</param>
+        /// <returns>Result Data</returns>
+        public async Task<TResult> PostAsyncMultipart<TResult>(string uri, object[] uriParams, byte[] data, string dataName, string token = "", string header = "")
+        {
+            try
+            {
+                using (HttpClient httpClient = CreateHttpClient(token))
+                {
+                    var urlWithUriParams = PrepareEndpoint(uri, uriParams, null);
+
+                    var request = new HttpRequestMessage(HttpMethod.Post, urlWithUriParams);
+
+                    if (!string.IsNullOrEmpty(header))
+                    {
+                        AddHeaderParameter(httpClient, header);
+                    }
+
+                    var multipartContent = new MultipartFormDataContent();
+                    var byteData = new ByteArrayContent(data); 
+                    multipartContent.Add(byteData, dataName, dataName);
+                    request.Content = multipartContent;
+
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    HttpResponseMessage response = await httpClient.SendAsync(request);
+
+                    await HandleResponse(response);
+
+                    string serialized = await response.Content.ReadAsStringAsync();
+
+                    TResult result = JsonConvert.DeserializeObject<TResult>(serialized, serializerSettings);
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         /// <summary>
         /// Perfor asyncrhonous Post request
         /// </summary>
@@ -444,8 +495,16 @@ namespace ArtOfTime.Services
 
             if (!string.IsNullOrEmpty(token))
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                if (token.StartsWith("Basic"))
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", token.Split()[1]);
+                }
+                else
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
             }
+
             return httpClient;
         }
 
