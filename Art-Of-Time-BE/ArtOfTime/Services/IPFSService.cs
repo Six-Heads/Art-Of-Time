@@ -50,7 +50,7 @@ namespace ArtOfTime.Services
 $@"{{
     ""name"": ""ArtOfTime"",
     ""description"": ""ArtOfTime#{id}"",
-    ""image"": ""{imageUri}""
+    ""image"": ""{imageUri}"",
     ""attributes"": [
         {{
                 ""value"": ""{ twitterAttributes[0]}""
