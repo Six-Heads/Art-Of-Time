@@ -40,19 +40,29 @@ namespace ArtOfTime.Services
         }
 
 
-        public async Task<TResult> GetAsyncInstantTimeout<TResult>(string uri, object[] uriParams, Dictionary<string, object> queryParams, string token = "")
+        public async Task<TResult> PostAsyncInstantTimeout<TRequest,TResult>(string uri, object[] uriParams, TRequest data, string token = "", string header = "")
         {
             try
             {
                 using (HttpClient httpClient = CreateHttpClientInstantTimeout(token))
                 {
-                    var urlWithQueryParams = PrepareEndpoint(uri, uriParams, queryParams);
+                    var urlWithUriParams = PrepareEndpoint(uri, uriParams, null);
 
-                    var request = new HttpRequestMessage(HttpMethod.Get, urlWithQueryParams);
+                    var request = new HttpRequestMessage(HttpMethod.Post, urlWithUriParams);
+
+                    if (!string.IsNullOrEmpty(header))
+                    {
+                        AddHeaderParameter(httpClient, header);
+                    }
+
+                    var jsonData = JsonConvert.SerializeObject(data, serializerSettings);
+                    request.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    var response = await httpClient.SendAsync(request);
+                    HttpResponseMessage response = await httpClient.SendAsync(request);
+
                     await HandleResponse(response);
+
                     string serialized = await response.Content.ReadAsStringAsync();
 
                     TResult result = JsonConvert.DeserializeObject<TResult>(serialized, serializerSettings);
