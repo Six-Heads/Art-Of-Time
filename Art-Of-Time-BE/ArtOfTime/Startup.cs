@@ -37,9 +37,9 @@ namespace ArtOfTime
             services.AddTransient<IApiProvider, ApiProvider>();
             services.AddTransient<IIPFSService, IPFSService>();
             services.AddTransient<IEthereumService, EthereumService>();
-
-
+            services.AddTransient<IImageGeneratorService, ImageGeneratorService>();
             services.AddSingleton<ITwitterService, TwitterService>();
+
             ITwitterService twitterService = new TwitterService(new ApiProvider());
             twitterService.GetTrends();
 
