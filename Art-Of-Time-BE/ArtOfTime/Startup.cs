@@ -36,7 +36,7 @@ namespace ArtOfTime
             JobStorage.Current = new MemoryStorage();
 
             RecurringJob.RemoveIfExists("generateimage");
-            RecurringJob.AddOrUpdate<GenerateImageJob>("generateimage", x => x.Work(null), Cron.Minutely);
+            //RecurringJob.AddOrUpdate<GenerateImageJob>("generateimage", x => x.Work(null), Cron.MinuteInterval(3));
 
             services.AddRazorPages();
 
@@ -48,6 +48,7 @@ namespace ArtOfTime
             services.AddTransient<IImageGeneratorService, ImageGeneratorService>();
             services.AddTransient<ITwitterService, TwitterService>();
 
+            //RecurringJob.Trigger("generateimage");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
