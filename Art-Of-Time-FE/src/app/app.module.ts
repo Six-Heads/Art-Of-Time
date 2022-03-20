@@ -8,12 +8,14 @@ import {
   HorizontalTimelineComponent
 } from "./horizontal-timeline-page/horizontal-timeline/horizontal-timeline.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { HtPageComponent } from './horizontal-timeline-page/horizontal-timeline/ht-page/ht-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HorizontalTimelinePageComponent,
-    HorizontalTimelineComponent
+    HorizontalTimelineComponent,
+    HtPageComponent
   ],
   imports: [
     BrowserModule,

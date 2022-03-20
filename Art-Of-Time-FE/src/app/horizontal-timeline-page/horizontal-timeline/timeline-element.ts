@@ -4,4 +4,5 @@ export interface TimelineElement {
   title: string;
   selected?: boolean;
   content: string;
+  id: number;
 }

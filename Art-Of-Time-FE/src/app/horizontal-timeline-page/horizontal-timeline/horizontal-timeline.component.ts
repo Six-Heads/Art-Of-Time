@@ -64,7 +64,7 @@ import { ActivatedRoute } from '@angular/router';
     ])
   ]
 })
-export class HorizontalTimelineComponent implements AfterViewInit, OnInit {
+export class HorizontalTimelineComponent implements AfterViewInit {
   prevLinkInactive: boolean = true;
   nextLinkInactive: boolean = false;
   loaded: boolean = false;
@@ -80,13 +80,6 @@ export class HorizontalTimelineComponent implements AfterViewInit, OnInit {
     private activatedRoute: ActivatedRoute) {
   }
 
-  ngOnInit(){
-    this.activatedRoute.queryParams.subscribe(queryParams=>{
-      if(queryParams["date"]){
-        console.log(moment(queryParams["date"], ))
-      }
-    });
-  }
 
   private _timelineWrapperWidth = 720;
 

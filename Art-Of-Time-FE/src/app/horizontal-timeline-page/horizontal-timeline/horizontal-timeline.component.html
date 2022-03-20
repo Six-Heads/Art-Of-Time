@@ -4,11 +4,12 @@
       <div class="events" #eventsWrapper [style.width.px]="eventsWrapperWidth">
         <ol>
           <li *ngFor="let item of timelineElements; let index = index">
-            <a #timelineEvents href="#" 
+            <a #timelineEvents href="#"
               [ngClass]="{'selected': item.selected, 'older-event': index < selectedIndex}"
-              [routerLink]="['.']"
-              [queryParams]="{date: item.date | date: 'dd-MM-YYYY-A'}"
-              (click)="onEventClick($event, item)">{{item.date | date:dateFormat}}</a>
+              (click)="onEventClick($event, item)">
+<!--              {{item.date | date:dateFormat}}-->
+            </a>
+
             <span>{{item.caption}}</span>
           </li>
         </ol>
@@ -34,6 +35,14 @@
         <h2>{{item.title}}</h2>
         <em>{{item.date | date:dateFormat}}</em>
         <p>{{item.content}}</p>
+        <ng-container *ngIf="item.id === 2">
+          <div class="align-content-center">
+          <iframe style="width: 800px; height: 600px; border: none;"
+                  allowfullscreen allow="gyroscope; accelerometer; vr" scrolling="no"
+                  src="https://n0tn1w.shapespark.com/gallery-single-room/">
+          </iframe>
+          </div>
+        </ng-container>
       </li>
     </ol>
   </div>
