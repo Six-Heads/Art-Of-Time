@@ -33,7 +33,9 @@
       <li *ngFor="let item of timelineElements; let index = index"
           [@contentState]="item.selected ? 'active' : (index < selectedIndex ? 'left' : 'right')">
         <h2>{{item.title}}</h2>
-<!--        <em></em>-->
+        <em>The gallery for 28 Feb PM </em>
+        <br>
+        <br>
         <p>{{item.content}}</p>
         <ng-container *ngIf="item.id === 2">
           <div class="align-content-center">
