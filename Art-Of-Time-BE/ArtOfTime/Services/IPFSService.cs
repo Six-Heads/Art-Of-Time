@@ -20,8 +20,8 @@ namespace ArtOfTime.Services
         {
             this.provider = provider;
             this.authToken = GenerateAuthToken(configuration["IPFS:ProjectId"], configuration["IPFS:ProjectSecret"]);
-            this.getUri = configuration["IPFS:UploadEndpoint"];
-            this.uploadUri = configuration["IPFS:DownloadEndpoint"];
+            this.getUri = configuration["IPFS:DownloadEndpoint"];
+            this.uploadUri = configuration["IPFS:UploadEndpoint"];
 
         }
 
