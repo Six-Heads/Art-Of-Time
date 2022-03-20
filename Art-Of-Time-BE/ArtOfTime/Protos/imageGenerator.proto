@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package imageGenerator;
+
+service ImageGenerator{
+    rpc GenerateImage(GenerateImageRequest) returns (Empty);
+    rpc GetImage(GetGeneratedImage) returns (GeneratedImageResponse);
+}
+
+message Empty{};
+
+message GenerateImageRequest(){
+    string ImageId = 1;
+    string BasedOnText = 2;
+}
+
+message GetGeneratedImage(){
+    string ImageId = 1;
+}
+
+message GeneratedImageResponse{
+    string ImageBase64 = 1;
+}
