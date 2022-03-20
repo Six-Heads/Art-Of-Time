@@ -38,9 +38,9 @@ namespace ArtOfTime.Data.Entities
         public byte[] ImageBase64 { get; set; }
 
         /// <summary>
-        /// NFT metadata
+        /// Image IPFS url
         /// </summary>
-        public string JsonMetadata { get; set; }
+        public string ImageUrl { get; set; }
 
         /// <summary>
         /// NFT metadata url to IPFS

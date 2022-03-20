@@ -124,11 +124,7 @@ namespace ArtOfTime.Jobs
                     {
                         image.ImageBase64 = null;
                         image.IsUploadedImage = true;
-                        image.JsonMetadata = MetadataHelper.GenerateJsonMetadata(
-                            image.UidFilename + ".json",
-                            imageUrl,
-                            image.TimeStamp,
-                            image.BasedOnText.Split(", ").ToList());
+                        image.ImageUrl = imageUrl;
 
                         // update db
                         await imageRepository.UpdateImage(image);
@@ -144,22 +140,31 @@ namespace ArtOfTime.Jobs
         private async Task UploadJsonMetadata()
         {
             // Upload not uploaded jsons
-            var notUploadedJsons = await imageRepository.GetNotUploadedJson();
+            var notUploadedImages = await imageRepository.GetNotUploadedJson();
 
-            foreach (var json in notUploadedJsons)
+            foreach (var image in notUploadedImages)
             {
                 try
                 {
+                    // Request current collection size to determine the next NFT id
+                    var id = await ethereumService.GetCollectionSize() + 1;
+
+                    var jsonMetadata = MetadataHelper.GenerateJsonMetadata(
+                            id.ToString(),
+                            image.ImageUrl,
+                            image.TimeStamp,
+                            image.BasedOnText.Split(", ").ToList());
+
                     // upload json to ipfs server
-                    var jsonUrl = await iPFSService.UploadData(json.JsonMetadata, json.UidFilename + ".json");
+                    var jsonUrl = await iPFSService.UploadData(jsonMetadata, image.UidFilename + ".json");
 
                     if (jsonUrl != null)
                     {
-                        json.JsonUrl = jsonUrl;
-                        json.IsUploadedJson = true;
+                        image.JsonUrl = jsonUrl;
+                        image.IsUploadedJson = true;
 
                         // update db
-                        await imageRepository.UpdateImage(json);
+                        await imageRepository.UpdateImage(image);
                     }
 
                 }
