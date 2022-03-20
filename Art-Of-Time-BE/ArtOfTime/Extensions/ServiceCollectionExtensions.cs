@@ -33,7 +33,8 @@ namespace ArtOfTime.Extensions
             JobStorage.Current = new MemoryStorage();
 
             RecurringJob.RemoveIfExists("generateimage");
-            RecurringJob.AddOrUpdate<GenerateImageJob>("generateimage", x => x.Work(null), Cron.Minutely());
+            RecurringJob.AddOrUpdate<GenerateImageJob>("generateimage", x => x.Work(null), Cron.Hourly());
+            RecurringJob.Trigger("generateimage");
 
             return services;
         }

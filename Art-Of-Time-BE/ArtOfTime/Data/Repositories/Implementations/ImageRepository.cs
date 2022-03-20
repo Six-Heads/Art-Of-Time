@@ -37,6 +37,31 @@ namespace ArtOfTime.Data.Repositories.Implementations
                 .ToListAsync();
         }
 
+        public async Task<List<Image>> GetNotUploadedImages()
+        {
+            return await dbContext
+                .Images
+                .Where(x => x.IsFetched && !x.IsUploadedImage)
+                .ToListAsync();
+        }
+
+
+        public async Task<List<Image>> GetNotUploadedJson()
+        {
+            return await dbContext
+               .Images
+               .Where(x => x.IsFetched && x.IsUploadedImage && !x.IsUploadedJson)
+               .ToListAsync();
+        }
+
+        public async Task<List<Image>> GetNotMinted()
+        {
+            return await dbContext
+               .Images
+               .Where(x => x.IsFetched && x.IsUploadedImage && x.IsUploadedJson && !x.IsMinted)
+               .ToListAsync();
+        }
+
         public async Task UpdateImage(Image image)
         {
             dbContext.Update(image);
