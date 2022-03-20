@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace ArtOfTime.Interfaces
 {
     public interface IIPFSService
     {
-        public Task<string> Upload(byte[] image, string timestamp, List<string> attributes);
+        Task<string> UploadData(string data, string dataName);
+        Task<string> UploadData(byte[] data, string dataName);
     }
 }

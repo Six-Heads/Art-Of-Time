@@ -9,7 +9,7 @@ namespace ArtOfTime.Services
     {
         // TODO: update - not valid at the moment
         // add versions for if debug if prod
-        private const string URL = "http://9f6f-2001-67c-20d0-aac-19ba-6030-2eeb-d7e3.ngrok.io/generate";
+        private const string URL = "http://0772-2001-67c-20d0-aac-9d0f-48af-6ed4-ad13.ngrok.io/generate";
 
         private readonly IApiProvider apiProvider;
 
