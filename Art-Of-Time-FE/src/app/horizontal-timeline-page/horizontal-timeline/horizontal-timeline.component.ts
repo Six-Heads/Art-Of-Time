@@ -5,12 +5,15 @@ import {
   Component,
   ElementRef,
   Input,
+  OnInit,
   QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { TimelineElement } from './timeline-element';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import * as moment from 'moment'
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'horizontal-timeline',
@@ -61,7 +64,7 @@ import { animate, keyframes, state, style, transition, trigger } from '@angular/
     ])
   ]
 })
-export class HorizontalTimelineComponent implements AfterViewInit {
+export class HorizontalTimelineComponent implements AfterViewInit, OnInit {
   prevLinkInactive: boolean = true;
   nextLinkInactive: boolean = false;
   loaded: boolean = false;
@@ -72,7 +75,17 @@ export class HorizontalTimelineComponent implements AfterViewInit {
   eventsWrapperWidth: number = 0;
   private _viewInitialized = false;
 
-  constructor(private _cdr: ChangeDetectorRef) {
+  constructor(
+    private _cdr: ChangeDetectorRef,
+    private activatedRoute: ActivatedRoute) {
+  }
+
+  ngOnInit(){
+    this.activatedRoute.queryParams.subscribe(queryParams=>{
+      if(queryParams["date"]){
+        console.log(moment(queryParams["date"], ))
+      }
+    });
   }
 
   private _timelineWrapperWidth = 720;
