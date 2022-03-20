@@ -103,6 +103,10 @@ namespace ArtOfTime.Jobs
                         // update db
                         await imageRepository.UpdateImage(image);
                     }
+                    else
+                    {
+                        logger.LogInformation($"Failed fetching image from Generator: {image.TimeStamp}");
+                    }
 
                 }
                 catch (Exception ex)
