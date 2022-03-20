@@ -36,35 +36,16 @@ namespace ArtOfTime.Jobs
         [AutomaticRetry(Attempts = 0)]
         public async Task Work(PerformContext hangfire)
         {
-            // Fetch not fetched images
-            var notFetchedImages = await imageRepository.GetNotFetchedImages();
+            await RequestImageGeneration();
+            await FetchGeneratedImages();
+            await UploadImages();
+            await UploadJsonMetadata();
+            await MintNFTs();
+        }
 
-            foreach (var image in notFetchedImages)
-            {
-                try
-                {
-                    // fetch image from python api
-                    var result = await imageGeneratorService.GetGeneratedImage(image.TimeStamp);
-
-                    if (result != null)
-                    {
-                        // upload to ipfs server
-                        var jsonUrl = await iPFSService.Upload(result, image.TimeStamp, image.BasedOnText.Split(", ").ToList());
-
-                        // write nft to the blockchain
-                        await ethereumService.CreateToken(jsonUrl);
-
-                        // update db
-                        image.IsFetched = true;
-                        await imageRepository.UpdateImage(image);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // TODO: Handle
-                }
-            }
-
+        private async Task RequestImageGeneration()
+        {
+            // Get new trends and request image generation
             try
             {
                 // Get trends
@@ -76,6 +57,9 @@ namespace ArtOfTime.Jobs
                     TimeStamp = CommonHelper.GetCurrentTimestamp().ToString(),
                     BasedOnText = string.Join(", ", twitterTrends),
                     IsFetched = false,
+                    IsUploadedImage = false,
+                    IsUploadedJson = false,
+                    IsMinted = false,
                 };
 
                 // Save new image entity to db
@@ -92,7 +76,120 @@ namespace ArtOfTime.Jobs
             {
                 // TODO: handle
             }
+        }
 
+
+        private async Task FetchGeneratedImages()
+        {
+            // Fetch not fetched images
+            var notFetchedImages = await imageRepository.GetNotFetchedImages();
+
+            foreach (var image in notFetchedImages)
+            {
+                try
+                {
+                    // fetch image from python api
+                    var result = await imageGeneratorService.GetGeneratedImage(image.TimeStamp);
+
+                    if (result != null)
+                    {
+                        image.IsFetched = true;
+                        image.ImageBase64 = result;
+
+                        // update db
+                        await imageRepository.UpdateImage(image);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    // TODO: Handle
+                }
+            }
+        }
+
+        private async Task UploadImages()
+        {
+            // Upload not uploaded images
+            var notUploadedImages = await imageRepository.GetNotUploadedImages();
+
+            foreach (var image in notUploadedImages)
+            {
+                try
+                {
+                    // upload image to ipfs server
+                    var imageUrl = await iPFSService.UploadData(image.ImageBase64, image.UidFilename + ".png");
+
+                    if (imageUrl != null)
+                    {
+                        image.ImageBase64 = null;
+                        image.IsUploadedImage = true;
+                        image.JsonMetadata = MetadataHelper.GenerateJsonMetadata(
+                            image.UidFilename + ".json",
+                            imageUrl,
+                            image.TimeStamp,
+                            image.BasedOnText.Split(", ").ToList());
+
+                        // update db
+                        await imageRepository.UpdateImage(image);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // TODO: Handle
+                }
+            }
+        }
+
+        private async Task UploadJsonMetadata()
+        {
+            // Upload not uploaded jsons
+            var notUploadedJsons = await imageRepository.GetNotUploadedJson();
+
+            foreach (var json in notUploadedJsons)
+            {
+                try
+                {
+                    // upload json to ipfs server
+                    var jsonUrl = await iPFSService.UploadData(json.JsonMetadata, json.UidFilename + ".json");
+
+                    if (jsonUrl != null)
+                    {
+                        json.JsonUrl = jsonUrl;
+                        json.IsUploadedJson = true;
+
+                        // update db
+                        await imageRepository.UpdateImage(json);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    // TODO: Handle
+                }
+            }
+        }
+
+
+        private async Task MintNFTs()
+        {
+            var notMintedNFTs = await imageRepository.GetNotMinted();
+
+            foreach (var nft in notMintedNFTs)
+            {
+                try
+                {
+                    //write nft to the blockchain
+                    await ethereumService.CreateToken(nft.JsonUrl);
+
+                    nft.IsMinted = true;
+                    await imageRepository.UpdateImage(nft);
+                }
+                catch (Exception ex)
+                {
+                    // TODO: Handle
+                }
+            }
         }
     }
 }
