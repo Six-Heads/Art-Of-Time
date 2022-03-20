@@ -1,16 +1,17 @@
-﻿namespace ArtOfTime.Services
+﻿using System.IO;
+using System.Threading.Tasks;
+
+using ArtOfTime.Interfaces;
+
+using Microsoft.Extensions.Configuration;
+
+using Nethereum.Contracts;
+using Nethereum.Hex.HexTypes;
+using Nethereum.Web3;
+using Nethereum.Web3.Accounts;
+
+namespace ArtOfTime.Services
 {
-    using System.IO;
-    using System.Threading.Tasks;
-
-    using ArtOfTime.Interfaces;
-
-    using Microsoft.Extensions.Configuration;
-
-    using Nethereum.Contracts;
-    using Nethereum.Hex.HexTypes;
-    using Nethereum.Web3;
-    using Nethereum.Web3.Accounts;
 
     public class EthereumService : IEthereumService
     {
@@ -28,9 +29,9 @@
         {
             this.configuration = configuration;
             this.privateKey = this.configuration["Ethereum:PrivateKey"];
-            this.contractAddress = "0xBb79bc65360e1d588b2966f7b4B0c25185FB6165";
+            this.contractAddress = this.configuration["Ethereum:ContractAddress"];
             this.infura = this.configuration["Ethereum:Infura"];
-            this.publicKey = "0xD71d8029C6d070D9D282394B537deA8c4C44e8C4";
+            this.publicKey = this.configuration["Ethereum:PublicKey"];
         }
 
         public async Task CreateToken(string tokenURI)

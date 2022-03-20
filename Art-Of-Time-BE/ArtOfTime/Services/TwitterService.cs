@@ -4,7 +4,6 @@ using ArtOfTime.Models.Twitter;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ArtOfTime.Services
@@ -16,7 +15,7 @@ namespace ArtOfTime.Services
 
         public TwitterService(IApiProvider apiProvider, IConfiguration configuration)
         {
-            this.apiProvider = apiProvider ?? throw new ArgumentNullException(nameof(apiProvider));
+            this.apiProvider = apiProvider;
             this.configuration = configuration;
         }
 
@@ -38,19 +37,17 @@ namespace ArtOfTime.Services
                 accessTokenSecret
             };
 
-            Dictionary<string, object> queryParams = new Dictionary<string, object>();
-
-            queryParams.Add("id", id);
+            var queryParams = new Dictionary<string, object>
+            {
+                { "id", id }
+            };
 
             try
             {
                 var result = await apiProvider.GetAsync<List<TrendsListModel>>(url, uriParams, queryParams, bearerToken);
                 var helper = new TwitterDataProcessingHelper();
 
-                var trendingHashtags = new List<string>();
-                trendingHashtags = await helper.ExtractText(result[0].Trends);
-
-                return trendingHashtags;
+                return await helper.ExtractText(result[0].Trends);
             }
             catch (Exception ex)
             {

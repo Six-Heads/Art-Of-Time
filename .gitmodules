@@ -1,0 +1,3 @@
+[submodule "Art-Of-Time-BE-Python/ArtOfTimeAI/CLIP"]
+	path = Art-Of-Time-BE-Python/ArtOfTimeAI/CLIP
+	url = https://github.com/openai/CLIP

@@ -1,7 +1,6 @@
 ﻿using ArtOfTime.Interfaces;
 using ArtOfTime.Models.Images;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ArtOfTime.Services
@@ -9,7 +8,8 @@ namespace ArtOfTime.Services
     public class ImageGeneratorService : IImageGeneratorService
     {
         // TODO: update - not valid at the moment
-        private const string URL = "http://localhost:5000/";
+        // add versions for if debug if prod
+        private const string URL = "http://9f6f-2001-67c-20d0-aac-19ba-6030-2eeb-d7e3.ngrok.io/generate";
 
         private readonly IApiProvider apiProvider;
 
@@ -27,8 +27,7 @@ namespace ArtOfTime.Services
         public async Task GenerateImage(GenerateImageRequestModel requestModel)
         {
             // we dont need the result at the moment
-            // the python script will need atleast 30minutes to generate new image
-            // TODO: maybe remove await
+            // the python script will need at least 30minutes to generate new image
             await apiProvider.PostAsyncInstantTimeout<GenerateImageRequestModel, object>(URL, null, requestModel);   
         }
 
@@ -39,7 +38,9 @@ namespace ArtOfTime.Services
         /// <returns>The image as byte array</returns>
         public async Task<byte[]> GetGeneratedImage(string imageId)
         {
-            return await apiProvider.GetAsync<byte[]>(URL, new object[] { imageId }, null);
+            var response = await apiProvider.GetAsync<GeneratedImageResponseModel>(URL + $"/{imageId}", null, null);
+
+            return !string.IsNullOrWhiteSpace(response.ImageBase64) ? Convert.FromBase64String(response.ImageBase64) : null; 
         }
     }
 }
