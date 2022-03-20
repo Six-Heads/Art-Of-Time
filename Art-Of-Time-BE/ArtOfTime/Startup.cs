@@ -24,6 +24,7 @@ namespace ArtOfTime
                 .AddDatabase(this.Configuration)
                 .AddApplicationServices()
                 .AddHangfire()
+                .AddgRPC()
                 .AddRazorPages();
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context)

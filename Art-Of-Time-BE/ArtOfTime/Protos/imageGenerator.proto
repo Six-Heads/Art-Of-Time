@@ -1,6 +1,9 @@
 syntax = "proto3";
 
+option csharp_namespace = "gRPCImageGenerator";
+
 package imageGenerator;
+
 
 service ImageGenerator{
     rpc GenerateImage(GenerateImageRequest) returns (Empty);
@@ -9,12 +12,12 @@ service ImageGenerator{
 
 message Empty{};
 
-message GenerateImageRequest(){
+message GenerateImageRequest{
     string ImageId = 1;
     string BasedOnText = 2;
 }
 
-message GetGeneratedImage(){
+message GetGeneratedImage{
     string ImageId = 1;
 }
 

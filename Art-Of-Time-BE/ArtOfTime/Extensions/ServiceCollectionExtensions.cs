@@ -4,11 +4,14 @@ using ArtOfTime.Data.Repositories.Implementations;
 using ArtOfTime.Interfaces;
 using ArtOfTime.Jobs;
 using ArtOfTime.Services;
+using Grpc.Net.Client;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using gRPCImageGenerator;
+using System;
 
 namespace ArtOfTime.Extensions
 {
@@ -34,9 +37,19 @@ namespace ArtOfTime.Extensions
 
             RecurringJob.RemoveIfExists("generateimage");
             RecurringJob.AddOrUpdate<GenerateImageJob>("generateimage", x => x.Work(null), Cron.Minutely());
+            RecurringJob.Trigger("generateimage");
 
             return services;
         }
 
+        public static IServiceCollection AddgRPC(this IServiceCollection services)
+        {
+            services.AddGrpcClient<ImageGenerator.ImageGeneratorClient>(o =>
+            {
+                o.Address = new Uri("http://8886-2001-67c-20d0-aac-9d0f-48af-6ed4-ad13.ngrok.io/");
+            });
+
+            return services;
+        }
     }
 }

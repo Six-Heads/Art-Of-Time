@@ -1,5 +1,6 @@
 ﻿using ArtOfTime.Interfaces;
 using ArtOfTime.Models.Images;
+using gRPCImageGenerator;
 using System;
 using System.Threading.Tasks;
 
@@ -12,10 +13,12 @@ namespace ArtOfTime.Services
         private const string URL = "http://9f6f-2001-67c-20d0-aac-19ba-6030-2eeb-d7e3.ngrok.io/generate";
 
         private readonly IApiProvider apiProvider;
+        private readonly ImageGenerator.ImageGeneratorClient client;
 
-        public ImageGeneratorService(IApiProvider apiProvider)
+        public ImageGeneratorService(IApiProvider apiProvider, ImageGenerator.ImageGeneratorClient client)
         {
             this.apiProvider = apiProvider;
+            this.client = client;
         }
 
         /// <summary>
@@ -28,6 +31,13 @@ namespace ArtOfTime.Services
         {
             // we dont need the result at the moment
             // the python script will need at least 30minutes to generate new image
+            //ImageGenerator.ImageGeneratorClient
+
+            client.GenerateImage(new GenerateImageRequest 
+            {
+                ImageId = requestModel.ImageId,
+                BasedOnText = requestModel.BasedOnText,
+            });
             await apiProvider.PostAsyncInstantTimeout<GenerateImageRequestModel, object>(URL, null, requestModel);   
         }
 

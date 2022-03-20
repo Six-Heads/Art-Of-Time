@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.19.4" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.44.0" />
+    <PackageReference Include="Grpc.Net.Client.Web" Version="2.44.0" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.44.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.44.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.28" />
     <PackageReference Include="Hangfire.Core" Version="1.7.28" />
     <PackageReference Include="Hangfire.MemoryStorage.Core" Version="1.4.0" />
@@ -28,6 +36,10 @@
   <ItemGroup>
     <Folder Include="Protos\" />
     <Folder Include="wwwroot\json\" />
+  </ItemGroup>
+
+  <ItemGroup>
+  	<Protobuf Include="Protos\imageGenerator.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>
