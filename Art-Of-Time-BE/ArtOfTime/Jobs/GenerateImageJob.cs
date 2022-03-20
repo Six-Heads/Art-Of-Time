@@ -5,6 +5,7 @@ using ArtOfTime.Interfaces;
 using ArtOfTime.Models.Images;
 using Hangfire;
 using Hangfire.Server;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,19 +19,22 @@ namespace ArtOfTime.Jobs
         private readonly ITwitterService twitterService;
         private readonly IIPFSService iPFSService;
         private readonly IEthereumService ethereumService;
+        private readonly ILogger<GenerateImageJob> logger;
 
         public GenerateImageJob(
             IImageRepository imageRepository,
             IImageGeneratorService imageGeneratorService,
             ITwitterService twitterService,
             IIPFSService iPFSService,
-            IEthereumService ethereumService)
+            IEthereumService ethereumService,
+            ILogger<GenerateImageJob> logger)
         {
             this.imageRepository = imageRepository;
             this.imageGeneratorService = imageGeneratorService;
             this.twitterService = twitterService;
             this.iPFSService = iPFSService;
             this.ethereumService = ethereumService;
+            this.logger = logger;
         }
 
         [AutomaticRetry(Attempts = 0)]
@@ -74,7 +78,7 @@ namespace ArtOfTime.Jobs
             }
             catch (Exception ex)
             {
-                // TODO: handle
+                logger.LogError(ex.Message);
             }
         }
 
@@ -103,7 +107,7 @@ namespace ArtOfTime.Jobs
                 }
                 catch (Exception ex)
                 {
-                    // TODO: Handle
+                    logger.LogError(ex.Message);
                 }
             }
         }
@@ -129,10 +133,14 @@ namespace ArtOfTime.Jobs
                         // update db
                         await imageRepository.UpdateImage(image);
                     }
+                    else
+                    {
+                        logger.LogInformation($"Failed uploading image to IPFS: {image.TimeStamp}");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    // TODO: Handle
+                    logger.LogError(ex.Message);
                 }
             }
         }
@@ -166,11 +174,15 @@ namespace ArtOfTime.Jobs
                         // update db
                         await imageRepository.UpdateImage(image);
                     }
+                    else
+                    {
+                        logger.LogInformation($"Failed uploading json to IPFS: {image.TimeStamp}");
+                    }
 
                 }
                 catch (Exception ex)
                 {
-                    // TODO: Handle
+                    logger.LogError(ex.Message);
                 }
             }
         }
@@ -192,7 +204,7 @@ namespace ArtOfTime.Jobs
                 }
                 catch (Exception ex)
                 {
-                    // TODO: Handle
+                    logger.LogError(ex.Message);
                 }
             }
         }
