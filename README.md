@@ -1,3 +1,4 @@
+![ArtOfTimeLogo](https://user-images.githubusercontent.com/60527300/191750766-63fce180-3be4-40cb-a265-a152243bd746.png)
 # Art-Of-Time 
 
 Depict the present moment in an objective way
